@@ -3,9 +3,9 @@ name: Generate release-artifacts
 
 # on events
 on:
-  release:
-    types: 
-        - created
+  push:
+    branches:
+      - 'master'
 
 # workflow tasks
 jobs:
@@ -19,7 +19,7 @@ jobs:
         uses: thatisuday/go-cross-build@v1
         with:
             platforms: 'linux/amd64, darwin/amd64, windows/amd64'
-            package: 'main'
+            package: 'main.go'
             name: 'webcam-uploader'
             compress: 'true'
             dest: 'dist'
