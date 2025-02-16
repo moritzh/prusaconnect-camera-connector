@@ -6,6 +6,7 @@ on:
   release:
     types: [created]
 
+    arm64, amd64
 
 permissions:
     contents: write
@@ -14,6 +15,9 @@ permissions:
 jobs:
   release-linux-amd64:
     name: release linux/amd64
+    strategy: 
+      matrix:
+        arch: ["arm64", "amd64"]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -21,4 +25,4 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goos: linux
-        goarch: amd64
+        goarch: ${{ matrix.arch }}
