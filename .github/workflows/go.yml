@@ -3,9 +3,9 @@ name: Generate release-artifacts
 
 # on events
 on:
-  push:
-    branches:
-      - 'master'
+  release:
+    types: [created]
+
 
 permissions:
     contents: write
