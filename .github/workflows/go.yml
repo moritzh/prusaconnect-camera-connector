@@ -5,9 +5,7 @@ name: Generate release-artifacts
 on:
   release:
     types: [created]
-
-    arm64, amd64
-
+    
 permissions:
     contents: write
     packages: write
