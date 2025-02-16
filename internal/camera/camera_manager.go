@@ -2,6 +2,7 @@ package camera
 
 import (
 	"fmt"
+	"time"
 
 	"gopkg.in/ini.v1"
 )
@@ -40,8 +41,18 @@ func LoadConfiguration() *CameraManager {
 	return &CameraManager{cameras: cameras, updateInterval: updateInterval}
 }
 
-func (c *CameraManager) UploadAll() {
-	for _, camera := range c.cameras {
-		camera.Upload()
+func (c *CameraManager) StartUploading() {
+	for {
+		count := 0
+		for _, camera := range c.cameras {
+			success := camera.Upload()
+			if success {
+				count = count + 1
+			}
+
+		}
+		fmt.Printf("Uploaded %d images, will now wait %d seconds\n", count, c.updateInterval)
+		time.Sleep(time.Duration(c.updateInterval) * time.Second)
 	}
+
 }

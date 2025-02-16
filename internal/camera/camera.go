@@ -2,10 +2,9 @@ package camera
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
-
-	"github.com/gofiber/fiber/v2/log"
 )
 
 type CameraConnection struct {
@@ -22,53 +21,39 @@ func NewCameraConnection(name string, token string, fingerprint string, localCam
 	}
 }
 
-func (c *CameraConnection) Upload() {
+func (c *CameraConnection) Upload() bool {
 	imageFile, error := FFMpegCaptureImage(c.LocalCameraName)
 
 	if error != nil {
-		log.Error(error)
+		log.Print(error)
+		return false
+	} else {
+		c.uploadSingleFileImage(imageFile)
+		defer imageFile.Close()
+		return true
 	}
-
-	//	if imageFile != nil {
-	c.uploadSingleFileImage(imageFile)
-	defer imageFile.Close()
-	fmt.Println("Uploaded a File!")
-	//}
 
 }
 
 func (c *CameraConnection) uploadSingleFileImage(file *os.File) {
 
-	client := http.Client{}
-
-	testFile, err := os.Open("image.jpg")
-
-	if err != nil {
-		fmt.Print(err)
-	}
-
-	//request, _ := http.NewRequest("PUT", "http://192.168.178.21:8080", testFile)
-	info, _ := testFile.Stat()
-	request, _ := http.NewRequest("PUT", "https://connect.prusa3d.com/c/snapshot", testFile)
+	info, _ := file.Stat()
+	request, _ := http.NewRequest("PUT", "https://connect.prusa3d.com/c/snapshot", file)
 	request.ContentLength = info.Size()
 
 	request.Header.Set("token", c.Token)
 	request.Header.Set("fingerprint", c.Fingerprint)
 	request.Header.Set("Content-Type", "image/jpeg")
 
-	fmt.Println(c.Token)
-	fmt.Println(c.Fingerprint)
-
-	res, err := client.Do(request)
+	res, err := http.DefaultClient.Do(request)
 
 	if err != nil {
-		log.Error(err)
-
+		log.Print(err)
 	}
 
 	response := make([]byte, res.ContentLength)
 	res.Body.Read(response)
 	fmt.Println(string(response))
 
-	fmt.Printf("Upload Done, Status Code %d", res.StatusCode)
+	fmt.Printf("Upload Done, Status Code %d\n", res.StatusCode)
 }
