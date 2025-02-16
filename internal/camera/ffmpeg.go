@@ -17,7 +17,7 @@ func FFMpegCaptureImage(device string) (*os.File, error) {
 	// if runtime.GOOS == "darwin" {
 	// 	cmd = exec.Command(command, "-f", "avfoundation", "-i", "\"FaceTime HD Camera\"", "-framerate", "30", "-s", "1024x786", "-ss", "0:0:2", "-frames", "1", tmpFile.Name())
 	// } else {
-	cmd = exec.Command(command, "-f", "video4linux2", "-s", "1024x786", "-i", device, "-ss", "0:0:2", "-frames", "1", tmpFile.Name())
+	cmd = exec.Command(command, "-y", "-f", "video4linux2", "-s", "1024x786", "-i", device, "-ss", "0:0:2", "-frames", "1", tmpFile.Name())
 	//}
 
 	cmd.Stdout = os.Stdout // or any other io.Writer
