@@ -1,0 +1,23 @@
+{
+  "version": "1",
+  "name": "Connect",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ],
+  "size": 0.0006494522094726562,
+  "filesCount": 2,
+  "proxy": {
+    "enabled": true,
+    "protocol": "http",
+    "hostname": "localhost",
+    "port": 8080,
+    "auth": {
+      "enabled": false,
+      "username": "",
+      "password": ""
+    },
+    "bypassProxy": ""
+  }
+}

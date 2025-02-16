@@ -1,0 +1,21 @@
+meta {
+  name: Get Cameras
+  type: http
+  seq: 2
+}
+
+put {
+  url: https://connect.prusa3d.com/c/snapshot
+  body: file
+  auth: none
+}
+
+headers {
+  Token: PfMguv9wmEUNxhaYhoZw
+  Fingerprint: asdfg123123aSDFASDF
+  Content-Type: image/jpg
+}
+
+body:file {
+  file: @file(C:\Users\moritz\Desktop\ezgif-7-2bb82eebae41.jpg) @contentType(image/jpeg)
+}
