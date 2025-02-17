@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/user"
+	"path/filepath"
 	"time"
 
 	"gopkg.in/ini.v1"
@@ -15,7 +17,10 @@ type CameraManager struct {
 }
 
 func loadConfigurationFile() (*ini.File, error) {
-	paths := []string{"./config.ini", "~/.pccc/config.ini"}
+	usr, _ := user.Current()
+	dir := usr.HomeDir
+
+	paths := []string{"./config.ini", filepath.Join(dir, "/.pccc/config.ini")}
 
 	for _, path := range paths {
 		data, _ := ini.Load(path)
