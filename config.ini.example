@@ -1,0 +1,6 @@
+interval=10
+
+[Camera0]
+token=token
+fingerprint=asdfg123123aSDFASDF
+device=/dev/video

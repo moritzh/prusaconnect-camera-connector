@@ -20,8 +20,9 @@ func FFMpegCaptureImage(device string) (*os.File, error) {
 	cmd = exec.Command(command, "-y", "-f", "video4linux2", "-s", "1024x786", "-i", device, "-ss", "0:0:2", "-frames", "1", tmpFile.Name())
 	//}
 
-	cmd.Stdout = os.Stdout // or any other io.Writer
-	cmd.Stderr = os.Stderr
+	// uncomment for debugging, otherwise a little noisy?
+	// cmd.Stdout = os.Stdout
+	// cmd.Stderr = os.Stderr
 
 	if err := cmd.Run(); err != nil {
 		tmpFile.Close()
