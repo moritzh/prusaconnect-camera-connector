@@ -19,7 +19,7 @@ Grab the [latest release from the release page](https://github.com/moritzh/prusa
 PCCC relies on a config file to work. The format is rather simple: 
 
 ```ini
-interval=10
+interval=10 # that's seconds
 
 [Camera0]
 token=abcdefgh
@@ -40,3 +40,7 @@ For fingerprint, you can use pretty much a random 20-character string, though us
 ### Config File Location
 
 The config file is loaded from `config.ini` (in the current directory) or `~/.pccc/config.ini`, in this order.
+
+# License 
+
+PCCC is licensed under the GPLv3, see LICENSE.
