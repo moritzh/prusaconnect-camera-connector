@@ -3,7 +3,7 @@ package main
 import (
 	"sync"
 
-	"github.com/moritzh/prusa_webcam_thing/internal/camera"
+	"github.com/moritzh/prusaconnect-camera-connector/internal/camera"
 )
 
 func main() {

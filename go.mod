@@ -1,4 +1,4 @@
-module github.com/moritzh/prusa_webcam_thing
+module github.com/moritzh/prusaconnect-camera-connector
 
 go 1.23.4
 

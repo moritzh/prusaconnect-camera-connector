@@ -1,7 +1,9 @@
 package camera
 
 import (
+	"errors"
 	"fmt"
+	"os"
 	"time"
 
 	"gopkg.in/ini.v1"
@@ -12,11 +14,25 @@ type CameraManager struct {
 	updateInterval int
 }
 
+func loadConfigurationFile() (*ini.File, error) {
+	paths := []string{"./config.ini", "~/.pccc/config.ini"}
+
+	for _, path := range paths {
+		data, _ := ini.Load(path)
+		if data != nil {
+			return data, nil
+		}
+	}
+
+	return nil, errors.New("No config file found in expected location")
+}
+
 func LoadConfiguration() *CameraManager {
-	inidata, err := ini.Load("config.ini")
+	inidata, err := loadConfigurationFile()
 
 	if err != nil {
-		fmt.Printf("Unable to load config.ini, does it exist?")
+		fmt.Printf("Can't find config.ini – Please consult the Readme at https://github.com/moritzh/prusa-webcam-uploader to get started.\n\n")
+		os.Exit(1)
 		return &CameraManager{}
 	}
 
@@ -43,15 +59,11 @@ func LoadConfiguration() *CameraManager {
 
 func (c *CameraManager) StartUploading() {
 	for {
-		count := 0
 		for _, camera := range c.cameras {
-			success := camera.Upload()
-			if success {
-				count = count + 1
-			}
-
+			go camera.Upload()
 		}
-		fmt.Printf("Uploaded %d images, will now wait %d seconds\n", count, c.updateInterval)
+
+		fmt.Printf("Done with image uploads.\n", c.updateInterval)
 		time.Sleep(time.Duration(c.updateInterval) * time.Second)
 	}
 
