@@ -24,7 +24,12 @@ interval=10 # that's seconds
 [Camera0]
 token=abcdefgh
 fingerprint=randomuuid
-device=/dev/video
+device=/dev/video0
+
+[Camera1]
+token=123456
+fingerprint=randomuuid2
+device=/dev/video1
 ```
 
 For every camera, you need to create a token from Prusa Connect. To do that, head over to [connect.prusa.com](https://connect.prusa.com), select the printer for which you'd like to add a camera and select "Add new other camera". 
@@ -36,6 +41,15 @@ Copy the token that appears and paste it into your config.
 ![image](docs/img2.png)
 
 For fingerprint, you can use pretty much a random 20-character string, though using a UUID is probably safest. 
+
+Simply run the command, it'll then periodically capture images and upload them. 
+
+`./prusaconnect-camera-connector`
+
+Notes: 
+* The Section title in the config file doesn't matter. Can be [Camera0] or [Sunshine] or anything else. 
+* The captured files are temporarily saved inside `/tmp`. 
+* There's no command line options. Just use the config file. 
 
 ### Config File Location
 
