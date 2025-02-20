@@ -53,7 +53,7 @@ Notes:
 
 ### Config File Location
 
-The config file is loaded from `config.ini` (in the current directory) or `~/.pccc/config.ini`, in this order.
+The config file is loaded from `/etc/pccc.config` or `pccc.config` (in the current directory), in this order.
 
 # License 
 

@@ -21,22 +21,21 @@ func NewCameraConnection(name string, token string, fingerprint string, localCam
 	}
 }
 
-func (c *CameraConnection) Upload() bool {
+func (c *CameraConnection) Upload(channel chan bool)  {
 	imageFile, error := FFMpegCaptureImage(c.LocalCameraName)
 
 	if error != nil {
 		log.Print(error)
-		return false
+		channel <- false
 	} else {
 		c.uploadSingleFileImage(imageFile)
 		defer imageFile.Close()
-		return true
+		channel <- true
 	}
 
 }
 
 func (c *CameraConnection) uploadSingleFileImage(file *os.File) {
-
 	info, _ := file.Stat()
 	request, _ := http.NewRequest("PUT", "https://connect.prusa3d.com/c/snapshot", file)
 	request.ContentLength = info.Size()
@@ -53,7 +52,6 @@ func (c *CameraConnection) uploadSingleFileImage(file *os.File) {
 
 	response := make([]byte, res.ContentLength)
 	res.Body.Read(response)
-	fmt.Println(string(response))
 
 	fmt.Printf("Upload Done, Status Code %d\n", res.StatusCode)
 }

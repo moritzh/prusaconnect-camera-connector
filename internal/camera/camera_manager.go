@@ -20,7 +20,7 @@ func loadConfigurationFile() (*ini.File, error) {
 	usr, _ := user.Current()
 	dir := usr.HomeDir
 
-	paths := []string{"./config.ini", filepath.Join(dir, "/.pccc/config.ini")}
+	paths := []string{"/etc/pccc.config", "./pccc.config")}
 
 	for _, path := range paths {
 		data, _ := ini.Load(path)
@@ -37,7 +37,7 @@ func LoadConfiguration() *CameraManager {
 
 	if err != nil {
 		fmt.Printf("Can't find config.ini – Please consult the Readme at https://github.com/moritzh/prusa-webcam-uploader to get started.\n\n")
-		os.Exit(1)
+		os.Exit(1) 
 		return &CameraManager{}
 	}
 
@@ -53,9 +53,14 @@ func LoadConfiguration() *CameraManager {
 		fingerprint := section.Key("fingerprint").Value()
 		cameraDevice := section.Key("device").Value()
 		strategy := "ffmpeg"
-		fmt.Println(section.Name())
-
 		cameras = append(cameras, *NewCameraConnection(section.Name(), token, fingerprint, cameraDevice, strategy))
+	}
+
+	if (len(cameras) > 0) { 
+		fmt.Printf("Found %d cameras\n", len(cameras))
+	} else {
+		fmt.Println("No cameras found, ciao!")
+		os.Exit(1)
 
 	}
 
@@ -64,11 +69,16 @@ func LoadConfiguration() *CameraManager {
 
 func (c *CameraManager) StartUploading() {
 	for {
+		channel := make(chan bool)
 		for _, camera := range c.cameras {
-			go camera.Upload()
+			go camera.Upload(channel)
 		}
 
-		fmt.Printf("Done with image uploads.\n", c.updateInterval)
+		for _, _ = range c.cameras {
+			<- channel
+		}
+
+		fmt.Printf("Done with image uploads, waiting %d seconds.\n", c.updateInterval)
 		time.Sleep(time.Duration(c.updateInterval) * time.Second)
 	}
 

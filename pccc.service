@@ -1,0 +1,10 @@
+[Unit]
+Description=PCCC Service
+
+[Service]
+Type=simple
+Restart=on-success
+ExecStart=/usr/local/bin/prusaconnect-camera-connector
+
+[Install]
+WantedBy=multi-user.target
