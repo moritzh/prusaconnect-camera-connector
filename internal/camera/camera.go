@@ -21,16 +21,15 @@ func NewCameraConnection(name string, token string, fingerprint string, localCam
 	}
 }
 
-func (c *CameraConnection) Upload(channel chan bool)  {
+func (c *CameraConnection) Upload() {
 	imageFile, error := FFMpegCaptureImage(c.LocalCameraName)
 
 	if error != nil {
 		log.Print(error)
-		channel <- false
 	} else {
 		c.uploadSingleFileImage(imageFile)
-		defer imageFile.Close()
-		channel <- true
+		imageFile.Close()
+		os.Remove(imageFile.Name())
 	}
 
 }
@@ -47,11 +46,11 @@ func (c *CameraConnection) uploadSingleFileImage(file *os.File) {
 	res, err := http.DefaultClient.Do(request)
 
 	if err != nil {
-		log.Print(err)
+		log.Printf("Upload failed with error: %w", err)
+		return
+	} else {
+		defer res.Body.Close()
+
+		fmt.Printf("Upload Done, Status Code %d\n", res.StatusCode)
 	}
-
-	response := make([]byte, res.ContentLength)
-	res.Body.Read(response)
-
-	fmt.Printf("Upload Done, Status Code %d\n", res.StatusCode)
 }
